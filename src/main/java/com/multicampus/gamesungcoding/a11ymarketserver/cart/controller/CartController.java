@@ -2,32 +2,29 @@ package com.multicampus.gamesungcoding.a11ymarketserver.cart.controller;
 
 
 import com.multicampus.gamesungcoding.a11ymarketserver.cart.model.CartDTO;
+import com.multicampus.gamesungcoding.a11ymarketserver.cart.model.CartAddRequest;
+import com.multicampus.gamesungcoding.a11ymarketserver.cart.model.CartQtyUpdateRequest;
 import com.multicampus.gamesungcoding.a11ymarketserver.cart.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import jakarta.validation.Valid;
+import java.net.URI;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Validated
 public class CartController {
 
     private final CartService cartService;
 
-    /**
-     * 장바구니 목록 조회
-     * GET /api/v1/cart?memberId={회원ID}
-     * 응답:
-     * {
-     * "items": [CartDTO...],
-     * "total": 12345
-     * }
-     */
-    @GetMapping("/api/v1/cart")
+    // GET /api/v1/cart 목록 조회 기능
+    @GetMapping("/v1/cart") //
     public ResponseEntity<Map<String, Object>> getCart(@RequestParam("memberId") Long memberId) {
         List<CartDTO> items = cartService.getCartItems(memberId);
         int total = cartService.getCartTotal(memberId);
@@ -35,7 +32,30 @@ public class CartController {
         Map<String, Object> body = new HashMap<>();
         body.put("items", items);
         body.put("total", total);
+        return ResponseEntity.ok(body);
+    }
 
-        return ResponseEntity.ok(body); // 빈 목록도 200 + [] 로 반환
+    // POST /api/v1/cart/items 상품 검색 기능
+    @PostMapping("/v1/cart/items")
+    public ResponseEntity<CartDTO> addItem(@Valid @RequestBody CartAddRequest req) {
+        CartDTO created = cartService.addItem(req);
+        return ResponseEntity.created(URI.create("/api/v1/cart/items/" + created.getCartItemId()))
+                .body(created);
+    }
+
+    // PATCH /api/v1/cart/items/{cartItemId} 수량 조정 기능
+    @PatchMapping("/v1/cart/items/{cartItemId}")
+    public ResponseEntity<CartDTO> updateQuantity(@PathVariable Long cartItemId,
+                                                  @Valid @RequestBody CartQtyUpdateRequest body) {
+        CartDTO updated = cartService.updateQuantity(cartItemId, body.getQuantity());
+        return ResponseEntity.ok(updated);
+    }
+
+    // DELETE /api/v1/cart/items?itemIds=1,2,3 삭제 기능
+    @DeleteMapping("/v1/cart/items")
+    public ResponseEntity<Map<String, Object>> deleteItems(@RequestParam("itemIds") List<Long> itemIds) {
+        int deleted = cartService.deleteItems(itemIds);
+        Map<String, Object> res = Map.of("deleted", deleted, "itemIds", itemIds);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
