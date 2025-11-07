@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/cart")
+@RequestMapping("/api")
 public class CartController {
 
     private final CartService cartService;
@@ -27,7 +27,7 @@ public class CartController {
      * "total": 12345
      * }
      */
-    @GetMapping
+    @GetMapping("/api/v1/cart")
     public ResponseEntity<Map<String, Object>> getCart(@RequestParam("memberId") Long memberId) {
         List<CartDTO> items = cartService.getCartItems(memberId);
         int total = cartService.getCartTotal(memberId);
