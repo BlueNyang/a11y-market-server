@@ -35,5 +35,5 @@ public class SellerApplyRequest {
      * 접근성 인증 여부
      */
     @NotNull
-    private Boolean A11yGuarantee;
+    private Boolean a11yGuarantee;
 }

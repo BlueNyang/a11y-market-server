@@ -24,7 +24,7 @@ public class SellerApplyResponse {
     private String businessNumber;
     private String sellerGrade;
     private String sellerIntro;
-    private Boolean A11yGuarantee;
+    private Boolean a11yGuarantee;
     private String sellerSubmitStatus;
     private LocalDateTime submitDate;
     private LocalDateTime approvedDate;

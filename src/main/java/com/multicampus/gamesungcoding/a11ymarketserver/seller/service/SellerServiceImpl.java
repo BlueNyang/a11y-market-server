@@ -38,7 +38,7 @@ public class SellerServiceImpl implements SellerService {
                 .businessNumber(request.getBusinessNumber())
                 .sellerGrade("NEW")                       // 기본 등급
                 .sellerIntro(request.getSellerIntro())
-                .A11yGuarantee(request.getA11yGuarantee())
+                .a11yGuarantee(request.getA11yGuarantee())
                 .sellerSubmitStatus("pending")                // 기본 상태
                 .build();
 
@@ -51,7 +51,7 @@ public class SellerServiceImpl implements SellerService {
                 .businessNumber(saved.getBusinessNumber())
                 .sellerGrade(saved.getSellerGrade())
                 .sellerIntro(saved.getSellerIntro())
-                .A11yGuarantee(saved.getA11yGuarantee())
+                .a11yGuarantee(saved.getA11yGuarantee())
                 .sellerSubmitStatus(saved.getSellerSubmitStatus())
                 .submitDate(saved.getSubmitDate())
                 .approvedDate(saved.getApprovedDate())

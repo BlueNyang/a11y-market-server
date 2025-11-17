@@ -81,7 +81,7 @@ public class Seller {
      * - DB 컬럼명: is_a11y_guarantee (NUMBER(1))
      */
     @Column(name = "is_A11y_Guarantee", nullable = false)
-    private Boolean A11yGuarantee;
+    private Boolean a11yGuarantee;
 
     /**
      * 승인 상태 (pending / approved / rejected)
