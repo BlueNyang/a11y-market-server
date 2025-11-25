@@ -63,12 +63,11 @@ public class AuthService {
         );
 
         String newAccessToken = jwtTokenProvider.createAccessToken(newAuthentication);
-        String newRefreshToken = refreshTokenService.createRefreshToken(newAuthentication);
 
         return LoginResponse.fromEntityAndTokens(
                 user,
                 newAccessToken,
-                newRefreshToken
+                refreshToken
         );
     }
 

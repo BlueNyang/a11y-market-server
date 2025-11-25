@@ -1,6 +1,8 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.service;
 
 
+import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.DataNotFoundException;
+import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.UserNotFoundException;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.dto.*;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.entity.Cart;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.entity.CartItems;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -75,13 +76,13 @@ public class CartService {
         // 검증: 해당 cartItemId가 userEmail의 장바구니에 속하는지 확인
         UUID cartId = getCartIdByUserEmail(userEmail);
         CartItems existingItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new NoSuchElementException("Cart item not found: " + cartItemId));
+                .orElseThrow(() -> new DataNotFoundException("Cart item not found: " + cartItemId));
         if (!existingItem.getCartId().equals(cartId)) {
-            throw new NoSuchElementException("Cart item does not belong to user: " + cartItemId);
+            throw new DataNotFoundException("Cart item does not belong to user: " + cartItemId);
         }
 
         CartItems cart = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new NoSuchElementException("Cart item not found: " + cartItemId));
+                .orElseThrow(() -> new DataNotFoundException("Cart item not found: " + cartItemId));
 
         cart.changeQuantity(quantity);
         return CartItemUpdatedResponse.fromEntity(cartItemRepository.save(cart));
@@ -102,7 +103,7 @@ public class CartService {
                 .map(CartItems::getCartItemId)
                 .toList();
         if (!invalidItems.isEmpty()) {
-            throw new NoSuchElementException("Some cart items do not belong to user: " + invalidItems);
+            throw new DataNotFoundException("Some cart items do not belong to user: " + invalidItems);
         }
 
         cartItemRepository.deleteAllByIdInBatch(itemIds);
@@ -110,7 +111,7 @@ public class CartService {
 
     private UUID getCartIdByUserEmail(String userEmail) {
         UUID userId = userRepository.findByUserEmail(userEmail)
-                .orElseThrow(() -> new NoSuchElementException("User not found: " + userEmail))
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + userEmail))
                 .getUserId();
 
         return cartRepository.findByUserId(userId)

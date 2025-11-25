@@ -11,5 +11,6 @@ public record CartItemDto(
         String productName,
         Integer productPrice,
         String categoryName,
-        Integer quantity) {
+        Integer quantity,
+        String productImageUrl) {
 }

@@ -39,12 +39,14 @@ public interface CartItemRepository extends JpaRepository<CartItems, UUID> {
                 p.productName,
                 p.productPrice,
                 cat.categoryName,
-                ci.quantity
+                ci.quantity,
+                pi.imageUrl
             )
             FROM CartItems ci
                         JOIN Product p ON ci.productId = p.productId
                         JOIN Categories cat ON p.categoryId = cat.categoryId
                         JOIN Seller s ON p.sellerId = s.sellerId
+                        LEFT JOIN ProductImages pi ON p.productId = pi.productId
             WHERE ci.cartId = (
                 SELECT c.cartId
                 FROM Cart c
