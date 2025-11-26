@@ -1,5 +1,6 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.admin.seller.service;
 
+import com.multicampus.gamesungcoding.a11ymarketserver.admin.seller.model.AdminSellerUpdateRequest;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.DataNotFoundException;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.InvalidRequestException;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.model.Seller;
@@ -48,5 +49,20 @@ public class AdminSellerService {
             case REJECTED -> seller.reject();
         }
     }
+
+    @Transactional
+    public void updateSellerInfo(UUID sellerId, AdminSellerUpdateRequest request) {
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new DataNotFoundException("Seller not found"));
+
+        seller.updateAdminSellerInfo(
+                request.sellerName(),
+                request.businessNumber(),
+                request.sellerIntro(),
+                request.sellerGrade() != null ? request.sellerGrade().getGrade() : null,
+                request.a11yGuarantee()
+        );
+    }
+
 
 }

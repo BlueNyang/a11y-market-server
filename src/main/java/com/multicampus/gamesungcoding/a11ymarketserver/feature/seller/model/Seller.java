@@ -61,10 +61,22 @@ public class Seller {
         this.sellerSubmitStatus = SellerSubmitStatus.APPROVED.getStatus();
         this.approvedDate = LocalDateTime.now();
     }
-    
+
     public void reject() {
         this.sellerSubmitStatus = SellerSubmitStatus.REJECTED.getStatus();
         this.approvedDate = LocalDateTime.now();
+    }
+
+    public void updateAdminSellerInfo(String sellerName,
+                                      String businessNumber,
+                                      String sellerIntro,
+                                      String sellerGrade,
+                                      Boolean a11yGuarantee) {
+        if (sellerName != null) this.sellerName = sellerName;
+        if (businessNumber != null) this.businessNumber = businessNumber;
+        if (sellerIntro != null) this.sellerIntro = sellerIntro;
+        if (sellerGrade != null) this.sellerGrade = sellerGrade;
+        if (a11yGuarantee != null) this.a11yGuarantee = a11yGuarantee;
     }
 }
 

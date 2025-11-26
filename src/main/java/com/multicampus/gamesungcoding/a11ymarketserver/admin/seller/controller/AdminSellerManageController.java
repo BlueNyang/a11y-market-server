@@ -1,5 +1,6 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.admin.seller.controller;
 
+import com.multicampus.gamesungcoding.a11ymarketserver.admin.seller.model.AdminSellerUpdateRequest;
 import com.multicampus.gamesungcoding.a11ymarketserver.admin.seller.service.AdminSellerService;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.model.SellerApplyResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,12 @@ public class AdminSellerManageController {
         return ResponseEntity.noContent().build();
     }
 
-    // 관리자 - 판매자 정보 수정 (미구현)
+    // 관리자 - 판매자 정보 수정
     @PatchMapping("/v1/admin/sellers/{sellerId}")
-    public ResponseEntity<String> updateSellerInfo(@PathVariable String sellerId, @RequestBody String sellerInfo) {
-        log.info("AdminUserManageController - updateSellerInfo");
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<String> updateSellerInfo(@PathVariable String sellerId, @RequestBody AdminSellerUpdateRequest request) {
 
-        // Placeholder for future implementation
-        return ResponseEntity.ok("Update seller information functionality is under development.");
+        adminSellerService.updateSellerInfo(UUID.fromString(sellerId), request);
+        return ResponseEntity.noContent().build();
     }
 }
