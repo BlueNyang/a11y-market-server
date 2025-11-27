@@ -3,8 +3,10 @@ package com.multicampus.gamesungcoding.a11ymarketserver.feature.order.service;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.DataNotFoundException;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.InvalidRequestException;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.UserNotFoundException;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.model.AddressResponse;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.model.Addresses;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.repository.AddressRepository;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.repository.DefaultAddressRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.entity.Cart;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.entity.CartItems;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.repository.CartItemRepository;
@@ -20,6 +22,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repositor
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +31,14 @@ import java.util.List;
 import java.util.UUID;
 
 // 결제 정보 조회
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final AddressRepository addressRepository;
+    private final DefaultAddressRepository defaultAddressRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrdersRepository ordersRepository;
@@ -43,7 +48,13 @@ public class OrderService {
     // 결제 정보 조회
     @Transactional(readOnly = true)
     public OrderCheckoutResponse getCheckoutInfo(String userEmail, OrderCheckRequest req) {
-        List<CartItems> cartItems = this.getCartItemsByIds(userEmail, req.checkoutItemIds());
+        if (req.orderAllItems() == false && (req.checkoutItemIds() == null || req.checkoutItemIds().isEmpty())) {
+            throw new InvalidRequestException("결제할 장바구니 아이템이 없습니다.");
+        }
+
+        List<CartItems> cartItems = req.orderAllItems() ?
+                cartItemRepository.findByUserEmail(userEmail) :
+                this.getCartItemsByIds(userEmail, req.checkoutItemIds());
 
         int totalAmount = 0;
         for (CartItems item : cartItems) {
@@ -56,12 +67,24 @@ public class OrderService {
 
         int shippingFee = 0;
 
+        // 사용가능한 주소 조회
+        List<Addresses> addresses = addressRepository.findByUserEmail(userEmail);
+        if (addresses.isEmpty()) {
+            throw new DataNotFoundException("사용 가능한 배송지가 없습니다.");
+        }
+
+        var defaultAddress = defaultAddressRepository.findByUserEmail(userEmail);
+
         // 최종 반환
         return new OrderCheckoutResponse(
                 OrderCheckoutStatus.AVAILABLE,
                 totalAmount,
                 shippingFee,
-                totalAmount + shippingFee
+                totalAmount + shippingFee,
+                addresses.stream()
+                        .map(AddressResponse::fromEntity)
+                        .toList(),
+                defaultAddress.getAddressId()
         );
     }
 
@@ -130,6 +153,12 @@ public class OrderService {
 
         List<CartItems> cartItems = cartItemRepository.findAllById(itemUuids);
         if (cartItems.size() != itemUuids.size()) {
+            log.debug("Requested IDs: {}, Found IDs: {}",
+                    itemUuids,
+                    cartItems.stream()
+                            .map(CartItems::getCartItemId)
+                            .toList()
+            );
             throw new InvalidRequestException("일부 장바구니 상품을 찾을 수 없습니다.");
         }
 
