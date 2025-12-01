@@ -14,9 +14,11 @@ public interface AddressRepository extends JpaRepository<Addresses, UUID> {
     // 전체 배송지 조회 (최신순)
     List<Addresses> findByUserOrderByCreatedAtDesc(Users user);
 
+    Optional<Addresses> findByUser_UserEmail(String userEmail);
+
     // 사용자 특정 배송지 조회
     Optional<Addresses> findByAddressIdAndUser_UserId(UUID addressId, UUID userId);
 
     // 사용자 이메일로 배송지 조회
-    List<Addresses> findByUser_UserEmail(String userEmail);
+    List<Addresses> findAllByUser_UserEmail(String userEmail);
 }

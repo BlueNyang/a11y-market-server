@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,69 +34,40 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 public class Product {
 
-    /**
-     * PK: UUID 36자
-     */
     @Id
     @UuidV7
     @Column(nullable = false, updatable = false, length = 16)
     private UUID productId;
 
-    /**
-     * FK: 판매자
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Seller seller;
 
-    /**
-     * FK: 카테고리
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Categories category;
 
-    /**
-     * 가격 (NULL 허용 → Integer)
-     */
     @Column(name = "product_price")
     private Integer productPrice;
 
-    /**
-     * 재고
-     */
     @Column(name = "product_stock")
     private Integer productStock;
 
-    /**
-     * 상품명
-     */
     @Column(name = "product_name", length = 255, nullable = false)
     private String productName;
 
-    /**
-     * 상세설명
-     */
     @Column(name = "product_description", columnDefinition = "CLOB")
     private String productDescription;
 
-    /**
-     * AI 요약
-     */
+    // 이전에 있던 컬럼. 현재는 사용되지 않음.
     @Column(name = "product_ai_summary", columnDefinition = "CLOB")
     private String productAiSummary;
 
-    /**
-     * 상태 (예: AVAILABLE, SOLD_OUT)
-     */
     @Enumerated(EnumType.STRING)
     @Column(name = "product_status", length = 50)
     private ProductStatus productStatus;
 
-    /**
-     * 생성/수정 시각 (JPA Auditing)
-     */
     @CreatedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column(name = "submit_date", updatable = false)
@@ -109,6 +81,10 @@ public class Product {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImages> productImages;
 
     /* === 의도 메서드 === */
     public void changeProductName(String newProductName) {
@@ -138,7 +114,7 @@ public class Product {
             String productDescription,
             Integer productPrice,
             Integer productStock) {
-        
+
         this.category = category;
         this.productName = productName;
         this.productDescription = productDescription;

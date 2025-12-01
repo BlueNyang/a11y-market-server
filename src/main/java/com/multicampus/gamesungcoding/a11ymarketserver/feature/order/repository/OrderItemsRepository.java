@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface OrderItemsRepository extends JpaRepository<OrderItems, UUID> {
     // 특정 orderId 주문의 모든 상품 조회
-    List<OrderItems> findAllByOrderId(UUID orderId);
+    List<OrderItems> findAllByOrder_OrderId(UUID orderId);
 
     @Query("""
             SELECT new com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.dto.SellerOrderItemResponse(o, oi)

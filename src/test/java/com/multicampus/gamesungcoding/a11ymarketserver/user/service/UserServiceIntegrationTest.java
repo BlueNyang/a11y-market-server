@@ -176,7 +176,7 @@ class UserServiceIntegrationTest {
                 .isPresent());
 
         Assertions.assertEquals(0, this.addressRepository
-                .findByUser_UserEmail(this.mockUser.getUserEmail())
+                .findAllByUser_UserEmail(this.mockUser.getUserEmail())
                 .size());
 
         // 주문 및 주문 상품은 기록이므로, 삭제되지 않아야 함

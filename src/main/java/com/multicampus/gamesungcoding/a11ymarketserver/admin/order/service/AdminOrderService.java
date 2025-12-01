@@ -40,7 +40,7 @@ public class AdminOrderService {
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new DataNotFoundException("Order not found"));
 
-        List<OrderItems> items = orderItemsRepository.findAllByOrderId(orderId);
+        List<OrderItems> items = orderItemsRepository.findAllByOrder_OrderId(orderId);
 
         return ResponseEntity.ok(OrderDetailResponse.fromEntity(order, items));
     }
