@@ -15,7 +15,7 @@ env:
 
 jobs:
   pre-comment:
-    runs-on: self-hosted
+    runs-on: [ self-hosted, be, qa ]
     steps:
       - name: Add PR comment
         uses: actions/github-script@v7
@@ -33,7 +33,7 @@ jobs:
   build-and-push:
     name: Build, Test and Push Image
     # Using self-hosted runner
-    runs-on: self-hosted
+    runs-on: [ self-hosted, be, qa ]
     needs: pre-comment
     outputs:
       # To use next job(deploy)
@@ -93,7 +93,7 @@ jobs:
   deploy:
     name: Deploy to PR Server
     needs: build-and-push
-    runs-on: self-hosted
+    runs-on: [ self-hosted, be, qa ]
 
     # Set output and secrets received through needs as global variables
     env:
@@ -113,7 +113,7 @@ jobs:
           echo "IMAGE_TAG=${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" >> $GITHUB_ENV
           echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
           echo "HOST_NAME=$SERVICE_NAME.${{ secrets.QA_DOMAIN }}" >> $GITHUB_ENV
-          echo "DEPLOY_PATH=${{ secrets.DOCKER_DIR }}/deployments/$SERVICE_NAME" >> $GITHUB_ENV
+          echo "DEPLOY_PATH=${{ secrets.AWS_DOCKER_DIR }}/deployments/$SERVICE_NAME" >> $GITHUB_ENV
 
       - name: Create compose file from template
         run: |
@@ -166,7 +166,7 @@ jobs:
     needs:
       - deploy
       - build-and-push
-    runs-on: self-hosted
+    runs-on: [ self-hosted, be, qa ]
     env:
       PR_NUMBER: ${{ needs.build-and-push.outputs.pr_number }}
     steps:
