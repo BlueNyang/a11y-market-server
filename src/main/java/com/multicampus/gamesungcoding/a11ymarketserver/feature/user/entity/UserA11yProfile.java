@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "USER_A11Y_SETTINGS")
+@Table(name = "USER_A11Y_PROFILES")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
@@ -24,107 +24,36 @@ public class UserA11yProfile {
 
     @Id
     @UuidV7
-    @Column(name = "PROFILE_ID", nullable = false, updatable = false, length = 16)
+    @Column(nullable = false, updatable = false, length = 16)
     private UUID profileId;
 
-    @Column(name = "USER_ID", nullable = false, updatable = false, length = 16)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private UUID userId;
+    private Users user;
 
-    @Column(name = "PROFILE_NAME", nullable = false, length = 50)
-    private String profileName;
-
-    @Column(name = "DESCRIPTION", length = 200)
-    private String description;
-
-    @Column(name = "CONTRAST_LEVEL", nullable = false)
-    private Integer contrastLevel;
-
-    @Column(name = "TEXT_SIZE_LEVEL", nullable = false)
-    private Integer textSizeLevel;
-
-    @Column(name = "TEXT_SPACING_LEVEL", nullable = false)
-    private Integer textSpacingLevel;
-
-    @Column(name = "LINE_HEIGHT_LEVEL", nullable = false)
-    private Integer lineHeightLevel;
-
-    @Column(name = "TEXT_ALIGN", length = 10, nullable = false)
-    private String textAlign;
-
-    @Column(name = "SCREEN_READER", nullable = false)
-    private Integer screenReader;
-
-    @Column(name = "SMART_CONTRAST", nullable = false)
-    private Integer smartContrast;
-
-    @Column(name = "HIGHLIGHT_LINKS", nullable = false)
-    private Integer highlightLinks;
-
-    @Column(name = "CURSOR_HIGHLIGHT", nullable = false)
-    private Integer cursorHighlight;
+    @Embedded
+    A11yProfileInfo profileInfo;
 
     @CreatedDate
-    @Column(name = "CREATED_AT", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "UPDATED_AT", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Builder
     private UserA11yProfile(
-            UUID userId,
-            String profileName,
-            String description,
-            Integer contrastLevel,
-            Integer textSizeLevel,
-            Integer textSpacingLevel,
-            Integer lineHeightLevel,
-            String textAlign,
-            Integer screenReader,
-            Integer smartContrast,
-            Integer highlightLinks,
-            Integer cursorHighlight
-    ) {
-        this.userId = userId;
-        this.profileName = profileName;
-        this.description = description;
-        this.contrastLevel = contrastLevel;
-        this.textSizeLevel = textSizeLevel;
-        this.textSpacingLevel = textSpacingLevel;
-        this.lineHeightLevel = lineHeightLevel;
-        this.textAlign = textAlign;
-        this.screenReader = screenReader;
-        this.smartContrast = smartContrast;
-        this.highlightLinks = highlightLinks;
-        this.cursorHighlight = cursorHighlight;
+            Users user,
+            A11yProfileInfo profileInfo) {
+
+        this.user = user;
+        this.profileInfo = profileInfo;
     }
 
-    public void update(
-            String profileName,
-            String description,
-            Integer contrastLevel,
-            Integer textSizeLevel,
-            Integer textSpacingLevel,
-            Integer lineHeightLevel,
-            String textAlign,
-            Integer screenReader,
-            Integer smartContrast,
-            Integer highlightLinks,
-            Integer cursorHighlight
-    ) {
-        this.profileName = profileName;
-        this.description = description;
-        this.contrastLevel = contrastLevel;
-        this.textSizeLevel = textSizeLevel;
-        this.textSpacingLevel = textSpacingLevel;
-        this.lineHeightLevel = lineHeightLevel;
-        this.textAlign = textAlign;
-        this.screenReader = screenReader;
-        this.smartContrast = smartContrast;
-        this.highlightLinks = highlightLinks;
-        this.cursorHighlight = cursorHighlight;
+    public void update(A11yProfileInfo profileInfo) {
+        this.profileInfo = profileInfo;
     }
 
 }

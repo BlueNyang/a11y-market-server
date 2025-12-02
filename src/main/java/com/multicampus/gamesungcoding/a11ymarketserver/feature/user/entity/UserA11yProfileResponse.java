@@ -1,4 +1,4 @@
-package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model;
+package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -12,28 +12,29 @@ public record UserA11yProfileResponse(
         Integer textSpacingLevel,
         Integer lineHeightLevel,
         String textAlign,
-        Integer screenReader,
-        Integer smartContrast,
-        Integer highlightLinks,
-        Integer cursorHighlight,
+        Boolean screenReader,
+        Boolean smartContrast,
+        Boolean highlightLinks,
+        Boolean cursorHighlight,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
 
     public static UserA11yProfileResponse fromEntity(UserA11yProfile p) {
+        var pi = p.getProfileInfo();
         return new UserA11yProfileResponse(
                 p.getProfileId(),
-                p.getProfileName(),
-                p.getDescription(),
-                p.getContrastLevel(),
-                p.getTextSizeLevel(),
-                p.getTextSpacingLevel(),
-                p.getLineHeightLevel(),
-                p.getTextAlign(),
-                p.getScreenReader(),
-                p.getSmartContrast(),
-                p.getHighlightLinks(),
-                p.getCursorHighlight(),
+                pi.getProfileName(),
+                pi.getDescription(),
+                pi.getContrastLevel(),
+                pi.getTextSizeLevel(),
+                pi.getTextSpacingLevel(),
+                pi.getLineHeightLevel(),
+                pi.getTextAlign(),
+                pi.getScreenReader(),
+                pi.getSmartContrast(),
+                pi.getHighlightLinks(),
+                pi.getCursorHighlight(),
                 p.getCreatedAt(),
                 p.getUpdatedAt()
         );
