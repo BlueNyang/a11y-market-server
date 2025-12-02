@@ -1,5 +1,6 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model;
 
+import com.multicampus.gamesungcoding.a11ymarketserver.common.id.UuidV7;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class UserA11yProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidV7
     @Column(name = "PROFILE_ID", nullable = false, updatable = false, length = 16)
     private UUID profileId;
 
@@ -123,7 +124,4 @@ public class UserA11yProfile {
         this.cursorHighlight = cursorHighlight;
     }
 
-    public void updateProfileName(String newName) {
-        this.profileName = newName;
-    }
 }
