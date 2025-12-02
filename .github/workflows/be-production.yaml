@@ -11,9 +11,9 @@ env:
   # GHCR image name
   IMAGE_NAME: ghcr.io/${{ secrets.GHCR_USER }}/${{ github.event.repository.name }}
   # Fixed value for staging
-  IMAGE_TAG: ghcr.io/${{ secrets.GHCR_USER }}/${{ github.event.repository.name }}:develop
+  IMAGE_TAG: ghcr.io/${{ secrets.GHCR_USER }}/${{ github.event.repository.name }}:${{ github.ref_name }}
   SERVICE_NAME: be-staging
-  DEPLOY_PATH: ${{ secrets.DOCKER_DIR }}/deployments/be-staging
+  DEPLOY_PATH: ${{ secrets.AWS_DOCKER_DIR }}/deployments/be-production
 
 jobs:
   build-and-push:
@@ -69,14 +69,14 @@ jobs:
   deploy:
     name: Deploy to Staging Server
     needs: build-and-push
-    runs-on: self-hosted
+    runs-on: [ self-hosted, be, prod ]
 
     # Set output and secrets received through needs as global variables
     env:
       HOST_NAME: ${{ secrets.STAGING_API_URL }}
       TEAM_USER: ${{ secrets.TEAM_USER }}
       TEAM_PASS: ${{ secrets.TEAM_PASS }}
-      APPLICATION_YAML: ${{ secrets.APPLICATION_STAGING_YAML }}
+      APPLICATION_YAML: ${{ secrets.APPLICATION_PRODUCTION_YAML }}
 
     steps:
       - name: Checkout code
@@ -89,7 +89,7 @@ jobs:
           echo "$COMPOSE_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Deploy to server via SSH
+      - name: Deploy to server
         run: |
           mkdir -p ${{ env.DEPLOY_PATH }}/config
           echo "[LOG] build compose file ..."

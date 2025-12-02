@@ -4,12 +4,12 @@ on:
 
 env:
   SERVICE_NAME: be-staging
-  DEPLOY_PATH: ${{ secrets.AWS_DOCKER_DIR }}/deployments/be-staging
+  DEPLOY_PATH: ${{ secrets.DOCKER_DIR }}/deployments/be-staging
 
 jobs:
   cleanup:
     name: Cleanup Staging Deployment
-    runs-on: [ self-hosted, be, staging ]
+    runs-on: [ self-hosted, be, qa ]
 
     steps:
       - name: Cleanup server resources via SSH

@@ -30,7 +30,7 @@ jobs:
       - name: Cleanup server resources
         run: |
           SERVICE_NAME=${{ steps.vars.outputs.service_name }}
-          DEPLOY_PATH="${{ secrets.AWS_DOCKER_DIR }}/deployments/$SERVICE_NAME"
+          DEPLOY_PATH="${{ secrets.DOCKER_DIR }}/deployments/$SERVICE_NAME"
           
           echo "[LOG] Attempting to cleanup project: $SERVICE_NAME"
           # Attempt to stop and remove with container name and fallback

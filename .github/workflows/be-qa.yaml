@@ -104,7 +104,7 @@ jobs:
           echo "IMAGE_TAG=${{ env.IMAGE_NAME }}:qa-${{ env.CLEAN_VERSION }}" >> $GITHUB_ENV
           echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
           echo "HOST_NAME=$SERVICE_NAME.${{ secrets.QA_DOMAIN }}" >> $GITHUB_ENV
-          echo "DEPLOY_PATH=${{ secrets.AWS_DOCKER_DIR }}/deployments/$SERVICE_NAME" >> $GITHUB_ENV
+          echo "DEPLOY_PATH=${{ secrets.DOCKER_DIR }}/deployments/$SERVICE_NAME" >> $GITHUB_ENV
 
       - name: Create compose file from template
         run: |
