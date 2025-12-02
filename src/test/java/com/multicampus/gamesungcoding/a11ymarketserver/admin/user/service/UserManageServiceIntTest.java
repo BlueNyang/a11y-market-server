@@ -1,6 +1,6 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.admin.user.service;
 
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +67,7 @@ class UserManageServiceIntTest {
     @DisplayName("사용자 권한 변경 통합 테스트")
     void changeUserRoleIntegrationTest() {
         var result = this.service.changePermission(this.userId1, "ADMIN");
-        assertThat(result.getUserRole()).isEqualTo("ADMIN");
+        assertThat(result.userRole()).isEqualTo("ADMIN");
 
         var updatedUser = this.userRepository.findById(this.userId1).orElseThrow();
         assertThat(updatedUser.getUserRole()).isEqualTo("ADMIN");

@@ -7,7 +7,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.entity.Sel
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.entity.SellerGrades;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.repository.SellerRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.service.SellerService;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.util.gemini.dto.ProductAnalysisResult;
 import com.multicampus.gamesungcoding.a11ymarketserver.util.gemini.service.ProductAnalysisService;

@@ -1,6 +1,7 @@
-package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model;
+package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity;
 
 import com.multicampus.gamesungcoding.a11ymarketserver.common.id.UuidV7;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,17 +54,17 @@ public class Users {
 
     // 회원 정보 수정
     public void updateUserInfo(UserUpdateRequest request) {
-        if (request.getUserName() != null) {
-            this.userName = request.getUserName();
+        if (request.userName() != null) {
+            this.userName = request.userName();
         }
-        if (request.getUserEmail() != null) {
-            this.userEmail = request.getUserEmail();
+        if (request.userEmail() != null) {
+            this.userEmail = request.userEmail();
         }
-        if (request.getUserPhone() != null) {
-            this.userPhone = request.getUserPhone();
+        if (request.userPhone() != null) {
+            this.userPhone = request.userPhone();
         }
-        if (request.getUserNickname() != null) {
-            this.userNickname = request.getUserNickname();
+        if (request.userNickname() != null) {
+            this.userNickname = request.userNickname();
         }
     }
 

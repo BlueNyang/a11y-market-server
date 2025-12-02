@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.auth.dto.JoinRequest;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.auth.dto.LoginRequest;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;

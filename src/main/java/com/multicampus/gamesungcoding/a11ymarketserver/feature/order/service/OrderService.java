@@ -19,7 +19,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.entity.Pr
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.entity.ProductImages;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repository.ProductImagesRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repository.ProductRepository;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.admin.user.service;
 
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.UserNotFoundException;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.UserAdminDTO;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.UserResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserAdminResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserResponse;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ import java.util.UUID;
 public class AdminUserManageService {
     private final UserRepository userRepository;
 
-    public List<UserAdminDTO> listAll() {
+    public List<UserAdminResponse> listAll() {
         return userRepository.findAll()
                 .stream()
-                .map(UserAdminDTO::fromEntity)
+                .map(UserAdminResponse::fromEntity)
                 .toList();
     }
 

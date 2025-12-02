@@ -24,7 +24,7 @@ public class OrderItems {
     @Column(length = 16, nullable = false)
     private UUID orderId;
 
-    @Column(length = 16, nullable = false)
+    @Column(length = 16)
     private UUID productId;
 
     @Column(nullable = false)

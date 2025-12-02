@@ -1,7 +1,7 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.admin.user.service;
 
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.UserResponse;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,7 +75,7 @@ class UserManageServiceTest {
 
         UserResponse result = this.service.changePermission(this.mockUser1Id, newRole);
 
-        assertThat(result.getUserRole()).isEqualTo(newRole);
+        assertThat(result.userRole()).isEqualTo(newRole);
         assertThat(this.mockUser1.getUserRole()).isEqualTo(newRole);
     }
 }

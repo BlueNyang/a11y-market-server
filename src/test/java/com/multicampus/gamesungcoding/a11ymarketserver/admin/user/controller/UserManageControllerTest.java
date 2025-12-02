@@ -4,7 +4,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.admin.user.service.AdminU
 import com.multicampus.gamesungcoding.a11ymarketserver.common.config.SecurityConfig;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.jwt.provider.JwtTokenProvider;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.properties.CorsProperties;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.UserResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -53,10 +53,16 @@ class UserManageControllerTest {
 
         BDDMockito.given(this.service.changePermission(eq(mockUserId), anyString()))
                 .willReturn(
-                        UserResponse.builder()
-                                .userId(mockUserId)
-                                .userRole(mockRole)
-                                .build()
+                        new UserResponse(
+                                mockUserId,
+                                null,
+                                null,
+                                null,
+                                null,
+                                mockRole,
+                                null,
+                                null
+                        )
                 );
 
         this.mockMvc.perform(patch("/api/v1/admin/users/{userId}/permission", mockUserId)

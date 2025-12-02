@@ -4,7 +4,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.common.config.SecurityCon
 import com.multicampus.gamesungcoding.a11ymarketserver.common.jwt.provider.JwtTokenProvider;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.properties.CorsProperties;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.controller.UserController;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.UserResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserResponse;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +35,15 @@ class UserControllerTest {
     @WithMockUser(username = "user1@example.com")
     void testGetUserEndpoint() throws Exception {
         String mockEmail = "user1@example.com";
-        UserResponse mockResponse = UserResponse.builder()
-                .userEmail(mockEmail)
-                .build();
+        UserResponse mockResponse = new UserResponse(
+                null,
+                null,
+                mockEmail,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         given(userService.getUserInfo(mockEmail)).willReturn(mockResponse);
 

@@ -10,8 +10,8 @@ import com.multicampus.gamesungcoding.a11ymarketserver.common.jwt.service.Refres
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.auth.dto.JoinRequest;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.auth.dto.LoginRequest;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.auth.dto.LoginResponse;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.UserResponse;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model.Users;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.dto.UserResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

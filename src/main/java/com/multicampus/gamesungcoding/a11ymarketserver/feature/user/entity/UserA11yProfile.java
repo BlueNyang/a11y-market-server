@@ -1,4 +1,4 @@
-package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.model;
+package com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity;
 
 import com.multicampus.gamesungcoding.a11ymarketserver.common.id.UuidV7;
 import jakarta.persistence.*;
