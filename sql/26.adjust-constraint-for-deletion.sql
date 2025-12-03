@@ -68,15 +68,15 @@ CREATE TABLE refresh_token (
          ON DELETE CASCADE
 );
 
-ALTER TABLE user_a11y_settings DROP CONSTRAINT fk_user_a11y_settings;
-ALTER TABLE user_a11y_settings
-   ADD CONSTRAINT fk_user_a11y_settings
+ALTER TABLE user_a11y_profiles DROP CONSTRAINT fk_user_a11y_profiles;
+ALTER TABLE user_a11y_profiles
+   ADD CONSTRAINT fk_user_a11y_profiles
       FOREIGN KEY ( user_id )
          REFERENCES users ( user_id )
             ON DELETE CASCADE;
 
 DELETE FROM product_ai_summary;
--- ALTER TABLE product_ai_summary DROP CONSTRAINT fk_product_ai_summary_product;
+ALTER TABLE product_ai_summary DROP CONSTRAINT fk_product_ai_summary_product;
 ALTER TABLE product_ai_summary
    ADD CONSTRAINT fk_product_ai_summary_product
       FOREIGN KEY ( product_id )
