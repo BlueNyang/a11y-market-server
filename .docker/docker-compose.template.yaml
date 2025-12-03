@@ -16,9 +16,11 @@ services:
       - "traefik.docker.network=proxy"
       # Router setting
       - "traefik.http.routers.${SERVICE_NAME}-ui.rule=Host(`${HOST_NAME}`) && (Path(`/swagger-ui.html`) || PathPrefix(`/swagger-ui`) || PathPrefix(`/v3/api-docs`))"
+      - "traefik.http.routers.${SERVICE_NAME}-ui.priority=2"
       - "traefik.http.routers.${SERVICE_NAME}-ui.entrypoints=websecure"
       - "traefik.http.routers.${SERVICE_NAME}-ui.tls=true"
-      - "traefik.http.routers.${SERVICE_NAME}-app.rule=Host(`${HOST_NAME}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.${SERVICE_NAME}-app.rule=Host(`${HOST_NAME}`)"
+      - "traefik.http.routers.${SERVICE_NAME}-app.priority=1"
       - "traefik.http.routers.${SERVICE_NAME}-app.entrypoints=websecure"
       - "traefik.http.routers.${SERVICE_NAME}-app.tls=true"
       # Basic Auth Middleware

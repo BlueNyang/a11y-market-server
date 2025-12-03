@@ -100,7 +100,7 @@ jobs:
       PR_NUMBER: ${{ needs.build-and-push.outputs.pr_number }}
       TEAM_USER: ${{ secrets.TEAM_USER }}
       TEAM_PASS: ${{ secrets.TEAM_PASS }}
-      APPLICATION_YAML: ${{ secrets.APPLICATION_TEST_YAML }}
+      APPLICATION_YAML: ${{ secrets.APPLICATION_PR_YAML }}
 
     steps:
       - name: Checkout code
