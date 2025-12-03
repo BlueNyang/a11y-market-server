@@ -1,6 +1,7 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.common.jwt.provider;
 
 import com.multicampus.gamesungcoding.a11ymarketserver.common.properties.JwtProperties;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.UserRole;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -16,6 +17,7 @@ import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,16 +39,11 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        var now = new Date();
-        var expiryDate = new Date(now.getTime() + accessTokenValidityMs);
+        return createToken(authentication.getName(), authorities);
+    }
 
-        return Jwts.builder()
-                .subject(authentication.getName())
-                .claim("auth", authorities)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(secretKey)
-                .compact();
+    public String createAccessToken(UUID userId, UserRole role) {
+        return createToken(userId.toString(), role.name());
     }
 
     public Authentication getAuthentication(String token) {
@@ -79,5 +76,18 @@ public class JwtTokenProvider {
             log.debug("JwtTokenProvider.getAuthentication - JWT token validation error: {}", e.getMessage());
         }
         return false;
+    }
+
+    private String createToken(String subject, String role) {
+        var now = new Date();
+        var expiryDate = new Date(now.getTime() + accessTokenValidityMs);
+
+        return Jwts.builder()
+                .subject(subject)
+                .claim("auth", role)
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(secretKey)
+                .compact();
     }
 }
