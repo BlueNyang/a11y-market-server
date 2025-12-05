@@ -1,8 +1,10 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.feature.main.controller;
 
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.main.model.MonthlyPopularProduct;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.main.dto.CategoryRecommendResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.main.entity.MonthlyPopularProduct;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.main.service.MainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +19,12 @@ public class MainController {
     private final MainService mainService;
 
     @GetMapping("/v1/main/products/populars")
-    public List<MonthlyPopularProduct> getPopularProducts() {
-        return mainService.findTop10ByOrderByRankingAsc();
+    public ResponseEntity<List<MonthlyPopularProduct>> getPopularProducts() {
+        return ResponseEntity.ok(mainService.findTop10ByOrderByRankingAsc());
+    }
+
+    @GetMapping("/v1/main/products/categories")
+    public ResponseEntity<List<CategoryRecommendResponse>> getCategories() {
+        return ResponseEntity.ok(mainService.getAllCategories());
     }
 }
