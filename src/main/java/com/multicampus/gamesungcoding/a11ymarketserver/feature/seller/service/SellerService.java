@@ -9,9 +9,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.common.properties.S3Stora
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.OrderItemStatus;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.OrderItems;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.repository.OrderItemsRepository;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.ImageMetadata;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.ProductDTO;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.ProductDetailResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.*;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.entity.*;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repository.CategoryRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repository.ProductAiSummaryRepository;
@@ -140,7 +138,7 @@ public class SellerService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDTO> getMyProducts(String userEmail, SellerInquireProductRequest req) {
+    public List<ProductInquireResponse> getMyProducts(String userEmail, SellerInquireProductRequest req) {
 
         Seller seller = sellerRepository.findByUser_UserEmail(userEmail)
                 .orElseThrow(() -> new DataNotFoundException("판매자 정보를 찾을 수 없습니다."));
@@ -151,7 +149,7 @@ public class SellerService {
 
         var products = productRepository.findBySeller_SellerId(sellerId, pageable);
 
-        return products.map(ProductDTO::fromEntity).toList();
+        return products.map(ProductInquireResponse::fromEntity).toList();
     }
 
     @Transactional

@@ -4,6 +4,7 @@ import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.dto.DailyRe
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.OrderItemStatus;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.ProductDTO;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.ProductDetailResponse;
+import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.dto.ProductInquireResponse;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.dto.*;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.service.SellerDashboardService;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.seller.service.SellerService;
@@ -65,11 +66,11 @@ public class SellerController {
     }
 
     @GetMapping("/v1/seller/products")
-    public ResponseEntity<List<ProductDTO>> getMyProducts(
+    public ResponseEntity<List<ProductInquireResponse>> getMyProducts(
             @AuthenticationPrincipal UserDetails userDetails,
             @ModelAttribute SellerInquireProductRequest req) {
 
-        List<ProductDTO> products = sellerService.getMyProducts(userDetails.getUsername(), req);
+        var products = sellerService.getMyProducts(userDetails.getUsername(), req);
         return ResponseEntity.ok(products);
     }
 
