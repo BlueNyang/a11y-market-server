@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new RestErrorResponse(
-                        HttpStatus.NOT_FOUND,
+                        HttpStatus.NOT_FOUND.value(),
                         ErrorRespStatus.USER_NOT_FOUND,
                         ex.getMessage())
                 );
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new RestErrorResponse(
-                        HttpStatus.NOT_FOUND,
+                        HttpStatus.NOT_FOUND.value(),
                         ErrorRespStatus.DATA_NOT_FOUND,
                         ex.getMessage())
                 );
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new RestErrorResponse(
-                        HttpStatus.CONFLICT,
+                        HttpStatus.CONFLICT.value(),
                         ErrorRespStatus.DUPLICATED_DATA,
                         ex.getMessage())
                 );
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new RestErrorResponse(
-                        HttpStatus.BAD_REQUEST,
+                        HttpStatus.BAD_REQUEST.value(),
                         ErrorRespStatus.INVALID_REQUEST,
                         ex.getMessage())
                 );
