@@ -26,21 +26,21 @@ public class OrderController {
     private final OrderService orderService;
 
     // 결제 준비 (결제 정보 조회)
-    @PostMapping("/v1/orders/pre-check")
-    public ResponseEntity<OrderCheckoutResponse> preCheck(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody OrderCheckRequest req) {
 
-        return ResponseEntity
-                .ok(orderService.getCheckoutInfo(userDetails.getUsername(), req));
+    /**
+     * @return 405 Method Not Allowed
+     * @deprecated v2로 대체됨.
+     */
+    @Deprecated
+    @PostMapping("/v1/orders/pre-check")
+    public ResponseEntity<Void> preCheck() {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
     @PostMapping("/v2/orders/pre-check")
     public ResponseEntity<OrderSheetResponse> getOrderSheet(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody OrderSheetRequest req) {
-
-        log.debug("OrderSheetRequest: {}", req);
 
         return ResponseEntity
                 .ok(orderService.getOrderSheet(userDetails.getUsername(), req));

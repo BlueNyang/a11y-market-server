@@ -2,7 +2,6 @@ package com.multicampus.gamesungcoding.a11ymarketserver.feature.order.service;
 
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.DataNotFoundException;
 import com.multicampus.gamesungcoding.a11ymarketserver.common.exception.InvalidRequestException;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.dto.AddressResponse;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.entity.Addresses;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.address.repository.AddressRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.dto.CartItemDto;
@@ -10,7 +9,6 @@ import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.entity.Cart;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.entity.CartItems;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.cart.repository.CartItemRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.dto.*;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.OrderCheckoutStatus;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.OrderItemStatus;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.OrderItems;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.entity.Orders;
@@ -18,7 +16,6 @@ import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.repository.
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.order.repository.OrdersRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.entity.Product;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.entity.ProductStatus;
-import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repository.ProductImagesRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.product.repository.ProductRepository;
 import com.multicampus.gamesungcoding.a11ymarketserver.feature.user.entity.Users;
 import lombok.RequiredArgsConstructor;
@@ -40,57 +37,7 @@ public class OrderService {
     private final AddressRepository addressRepository;
     private final OrdersRepository ordersRepository;
     private final OrderItemsRepository orderItemsRepository;
-    private final ProductImagesRepository productImagesRepository;
     private final ProductRepository productRepository;
-
-    // 결제 정보 조회
-    public OrderCheckoutResponse getCheckoutInfo(String userEmail, OrderCheckRequest req) {
-        if (req.orderAllItems() == false && (req.checkoutItemIds() == null || req.checkoutItemIds().isEmpty())) {
-            throw new InvalidRequestException("결제할 장바구니 아이템이 없습니다.");
-        }
-
-        List<CartItems> cartItems = req.orderAllItems() ?
-                cartItemRepository.findByCart_User_UserEmail(userEmail) :
-                this.getCartItemsByIds(userEmail, req.checkoutItemIds());
-
-        int totalAmount = 0;
-        for (CartItems item : cartItems) {
-            Product product = item.getProduct();
-            if (product == null) {
-                throw new DataNotFoundException("장바구니에 담긴 상품을 찾을 수 없습니다.");
-            }
-
-            int qty = item.getQuantity();
-            int subtotal = product.getProductPrice() * qty;
-            totalAmount += subtotal;
-        }
-
-        int shippingFee = 0;
-
-        // 사용가능한 주소 조회
-        List<Addresses> addresses = addressRepository.findAllByUser_UserEmail(userEmail);
-        if (addresses.isEmpty()) {
-            throw new DataNotFoundException("사용 가능한 배송지가 없습니다.");
-        }
-
-        var defaultAddress = addresses
-                .stream()
-                .filter(Addresses::getIsDefault)
-                .findFirst()
-                .orElse(addresses.getFirst()); // 기본 배송지가 없으면 첫 번째 주소 사용
-
-        // 최종 반환
-        return new OrderCheckoutResponse(
-                OrderCheckoutStatus.AVAILABLE,
-                totalAmount,
-                shippingFee,
-                totalAmount + shippingFee,
-                addresses.stream()
-                        .map(AddressResponse::fromEntity)
-                        .toList(),
-                defaultAddress.getAddressId()
-        );
-    }
 
     public OrderSheetResponse getOrderSheet(String userEmail, OrderSheetRequest req) {
         List<CartItemDto> orderItems = new ArrayList<>();
