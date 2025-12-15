@@ -1,14 +1,25 @@
 package com.multicampus.gamesungcoding.a11ymarketserver.util.gemini.service;
 
 import com.multicampus.gamesungcoding.a11ymarketserver.util.gemini.dto.ProductAnalysisResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.model.Media;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Service
 public class ProductAnalysisService {
     // 이미지 업로드 테스트 이후 적용
@@ -49,33 +60,81 @@ public class ProductAnalysisService {
                         : userDescription
         );
 
+        List<Media> mediaList = new ArrayList<>();
+        if (images != null) {
+            for (var image : images) {
+                try {
+                    byte[] resizedBytes = resizeImage(image, 1024, "png");
+                    mediaList.add(new Media(
+                            MimeTypeUtils.IMAGE_PNG,
+                            new ByteArrayResource(resizedBytes)
+                    ));
+                } catch (IOException err) {
+                    log.error("이미지 처리 중 오류 발생: {}", err.getMessage());
+                    try {
+                        mediaList.add(new Media(
+                                MimeTypeUtils.parseMimeType(Objects.requireNonNull(image.getContentType())),
+                                image.getResource()
+                        ));
+                    } catch (Exception e) {
+                        log.error("원본 이미지 추가 중 오류 발생: {}", e.getMessage());
+                    }
+                }
+            }
+        }
+
+        var userMessage = new UserMessage(prompt, mediaList);
 
         return chatClient.prompt()
-                .user(u -> {
-                    u.text(prompt);
-                    if (images != null && !images.isEmpty()) {
-                        for (var image : images) {
-                            var contentType = image.getContentType();
-                            if (contentType == null || !contentType.startsWith("image/")) {
-                                continue;
-                            }
-                            u.media(
-                                    new Media(
-                                            MimeTypeUtils.parseMimeType(contentType),
-                                            image.getResource()
-                                    )
-                            );
-                        }
-                    }
-                })
+                .messages(userMessage)
                 .call()
                 .entity(ProductAnalysisResult.class);
 
-        // dummy return
-        // return new ProductAnalysisResult(
-        //         productName,
-        //         userDescription,
-        //         images.getFirst().getName()
-        // );
+        /* dummy
+        return new ProductAnalysisResult(
+                productName,
+                userDescription,
+                images.getFirst().getName()
+        );*/
+    }
+
+    private byte[] resizeImage(MultipartFile originalImage, int targetSize, String format) throws IOException {
+        BufferedImage image = ImageIO.read(originalImage.getInputStream());
+        if (image == null) {
+            return originalImage.getBytes(); // 이미지가 아니면 원본 반환
+        }
+
+        int originalWidth = image.getWidth();
+        int originalHeight = image.getHeight();
+
+        // 이미지가 targetSize보다 작으면 리사이징 안 함
+        if (originalWidth <= targetSize && originalHeight <= targetSize) {
+            // 포맷 통일을 위해 변환은 수행 (선택사항)
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, format, baos);
+            return baos.toByteArray();
+        }
+
+        // 비율 유지하며 새 크기 계산
+        int newWidth;
+        int newHeight;
+        if (originalWidth > originalHeight) {
+            newWidth = targetSize;
+            newHeight = (int) (originalHeight * ((double) targetSize / originalWidth));
+        } else {
+            newHeight = targetSize;
+            newWidth = (int) (originalWidth * ((double) targetSize / originalHeight));
+        }
+
+        // 리사이징 실행
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = resizedImage.createGraphics();
+        graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
+        graphics.dispose();
+
+        // 바이트 배열로 변환
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, format, baos);
+        return baos.toByteArray();
     }
 }
