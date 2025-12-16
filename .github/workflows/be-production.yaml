@@ -1,8 +1,6 @@
 name: BE | Production - Build and Deploy
 on:
   push:
-    branches:
-      - master
     tags:
       - 'v*.*.*'
   workflow_dispatch:
@@ -10,9 +8,9 @@ on:
 env:
   # GHCR image name
   IMAGE_NAME: ghcr.io/${{ secrets.GHCR_USER }}/${{ github.event.repository.name }}
-  # Fixed value for staging
+  # Fixed value for production deployment
   IMAGE_TAG: ghcr.io/${{ secrets.GHCR_USER }}/${{ github.event.repository.name }}:${{ github.ref_name }}
-  SERVICE_NAME: be-staging
+  SERVICE_NAME: be-production
   DEPLOY_PATH: ${{ secrets.AWS_DOCKER_DIR }}/deployments/be-production
 
 jobs:
@@ -73,7 +71,7 @@ jobs:
 
     # Set output and secrets received through needs as global variables
     env:
-      HOST_NAME: ${{ secrets.STAGING_API_URL }}
+      HOST_NAME: ${{ secrets.PRODUCTION_DOMAIN }}
       TEAM_USER: ${{ secrets.TEAM_USER }}
       TEAM_PASS: ${{ secrets.TEAM_PASS }}
       APPLICATION_YAML: ${{ secrets.APPLICATION_PRODUCTION_YAML }}
@@ -82,9 +80,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create compose file from template
+      - name: Create compose file from production template
         run: |
-          export COMPOSE_CONTENT=$(envsubst < .docker/docker-compose.template.yaml)
+          export COMPOSE_CONTENT=$(envsubst < .docker/docker-compose.production.yaml)
           echo "COMPOSE_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$COMPOSE_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
