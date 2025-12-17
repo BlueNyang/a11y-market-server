@@ -44,8 +44,8 @@ CREATE TABLE addresses (
    receiver_name    VARCHAR2(30) NOT NULL,
    receiver_phone   VARCHAR2(15) NOT NULL,
    receiver_zipcode CHAR(5) NOT NULL,
-   receiver_addr1   VARCHAR2(100) NOT NULL,
-   receiver_addr2   VARCHAR2(200),
+   receiver_addr1   VARCHAR2(300) NOT NULL,
+   receiver_addr2   VARCHAR2(300),
    created_at       TIMESTAMP NOT NULL,
    is_default       NUMBER(1,0) DEFAULT 0 NOT NULL,
    CONSTRAINT fk_address_user FOREIGN KEY ( user_id )
@@ -57,7 +57,7 @@ CREATE TABLE user_a11y_profiles (
    profile_id         RAW(16) PRIMARY KEY,
    user_id            RAW(16) NOT NULL,
    profile_name       VARCHAR2(50) NOT NULL,
-   description        VARCHAR2(200), -- 요약 텍스트
+   description        VARCHAR2(200),
    is_preset          NUMBER(1,0) DEFAULT 0 NOT NULL,
    contrast_level     NUMBER(1,0) NOT NULL,
    text_size_level    NUMBER(1,0) NOT NULL,
@@ -137,11 +137,12 @@ CREATE TABLE product_images (
    image_url      VARCHAR2(2048) NOT NULL,
    alt_text       CLOB,
    created_at     TIMESTAMP DEFAULT current_timestamp,
-   image_sequence INT NOT NULL, -- 추가됨
+   image_sequence INT NOT NULL,
    CONSTRAINT fk_product FOREIGN KEY ( product_id )
       REFERENCES products ( product_id )
 );
 
+-- 이미지 시퀀스에 대한 고유 인덱스
 CREATE UNIQUE INDEX idx_product_image_sequence ON
    product_images (
       product_id,
@@ -169,7 +170,6 @@ CREATE TABLE cart_items (
 );
 
 -- 13. 주문 (Orders)
--- payment_key 컬럼 포함
 CREATE TABLE orders (
    order_id         RAW(16) PRIMARY KEY,
    user_name        VARCHAR2(30) NOT NULL,
@@ -178,19 +178,18 @@ CREATE TABLE orders (
    receiver_name    VARCHAR2(30) NOT NULL,
    receiver_phone   VARCHAR2(15) NOT NULL,
    receiver_zipcode CHAR(5) NOT NULL,
-   receiver_addr1   VARCHAR2(100) NOT NULL,
-   receiver_addr2   VARCHAR2(200),
+   receiver_addr1   VARCHAR2(300) NOT NULL,
+   receiver_addr2   VARCHAR2(300),
    total_price      INT NOT NULL,
    order_status     VARCHAR2(30) NOT NULL,
    created_at       TIMESTAMP DEFAULT current_timestamp,
-   payment_key      VARCHAR2(200), -- 추가됨
+   payment_key      VARCHAR2(200),
    CONSTRAINT chk_user_email_or_phone
       CHECK ( user_email IS NOT NULL
           OR user_phone IS NOT NULL )
 );
 
 -- 14. 주문 상세 아이템 (Order Items)
--- product_image_url 컬럼 포함
 CREATE TABLE order_items (
    order_item_id     RAW(16) PRIMARY KEY,
    order_id          RAW(16) NOT NULL,
@@ -200,7 +199,7 @@ CREATE TABLE order_items (
    product_quantity  INT NOT NULL,
    order_item_status VARCHAR2(20) NOT NULL,
    cancel_reason     CLOB,
-   product_image_url VARCHAR2(255), -- 추가됨
+   product_image_url VARCHAR2(2048),
    CONSTRAINT fk_orderitem_order FOREIGN KEY ( order_id )
       REFERENCES orders ( order_id ),
    CONSTRAINT fk_orderitem_product FOREIGN KEY ( product_id )
